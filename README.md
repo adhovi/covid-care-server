@@ -15,4 +15,4 @@ Connect Me on [Facebook](https://facebook.com/adhovi)
 
 ### `Client-Side-Repository`
 
-[Covid-Care-client](https://github.com/Porgramming-Hero-web-course/complete-website-client-adhovi)
+[Covid-Care-client](https://github.com/adhovi/covid-care-client)
