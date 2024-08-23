@@ -1,22 +1,21 @@
 {
   "name": "covid-care-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is the server side code of Covid-Care. Covid-Care is a online store, where you can find emergency medical services during this pandemic, Like ambulance booking, oxygen cylinder home delivery and also apply for vaccination. There's some basic features like tested case tracker. You can book for service and can see the status of your order. There's a admin panel for admins. They can set the status of orders and can add or delete services.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon index",
-    "start": "node index.js"
+    "star": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Abdul Hasib Ovi",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "mongodb": "^3.6.6"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.7"
+    "mongodb": "^6.8.0",
+    "nodemon": "^3.1.4"
   }
 }
