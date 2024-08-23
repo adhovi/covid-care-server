@@ -1,15 +1,15 @@
 {
     "version":2,
-    "build":[
+    "builds":[
         {
             "src": "./index.js",
-            "user": "@vercel/node"
+            "use": "@vercel/node"
         }
     ],
     "routes":[
         {
             "src": "/(.*)",
-            "dest":"/",
+            "destination":"/",
             "methods":["GET","POST","PUT","PATCH","DELETE","OPTIONS"]
         }
     ]
