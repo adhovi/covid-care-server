@@ -5,7 +5,9 @@ const {
   MongoClient,
   ServerApiVersion
 } = require('mongodb');
-const ObjectId = require("mongodb").ObjectID;
+const {
+  ObjectId
+} = require('mongodb');
 const bodyParser = require("body-parser");
 
 require("dotenv").config();
@@ -35,150 +37,120 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    const bookingsCollection = client
-      .db(process.env.DB_NAME)
-      .collection("bookings");
 
-    app.post("/addBooking", (req, res) => {
+    const bookingsCollection = client.db(process.env.DB_NAME).collection("bookings");
+
+    app.post("/addBooking", async (req, res) => {
       const newBooking = req.body;
-      bookingsCollection.insertOne(newBooking).then((result) => {
-        res.send(result.insertedCount > 0);
-      });
+      const result = await bookingsCollection.insertOne(newBooking)
+      res.send(result.insertedCount > 0);
     });
 
-    app.get("/bookings", (req, res) => {
-      bookingsCollection
-        .find({
-          email: req.query.email
-        })
-        .toArray((err, items) => {
-          res.send(items);
-        });
+
+    app.get("/bookings", async (req, res) => {
+      const bookings = bookingsCollection.find({
+        email: req.query.email
+      })
+      const items = await bookings.toArray();
+      res.send(items);
     });
 
-    app.get("/orders", (req, res) => {
-      bookingsCollection.find().toArray((err, items) => {
-        console.log(items);
-      });
+    app.get("/orders", async (req, res) => {
+      const orders = bookingsCollection.find()
+      const items = await orders.toArray();
+      res.send(items);
     });
 
-    app.post("/updateOrderStatus", (req, res) => {
+
+    app.post("/updateOrderStatus", async (req, res) => {
+      console.log(req.body.id);
       const order = req.body;
-      console.log(order);
-      bookingsCollection.updateOne({
-          _id: ObjectId(order.id)
-        }, {
-          $set: {
-            status: order.status
-          },
+      const result = await bookingsCollection.updateOne({
+        _id: new ObjectId(order.id)
+      }, {
+        $set: {
+          status: order.status
         },
-        (err, result) => {
-          if (err) {
-            console.log(err);
-            res.status(500).send({
-              message: err
-            });
-          } else {
-            res.send(result);
-            console.log(result);
-          }
-        }
-      );
+      }, );
+      res.send(result.modifiedCount > 0)
     });
 
     //******************
     // Bookings From Here
     //******************
 
-    const servicesCollection = client
-      .db(process.env.DB_NAME)
-      .collection("services");
+    const servicesCollection = client.db(process.env.DB_NAME).collection("services");
 
-    app.get("/services", (req, res) => {
-      servicesCollection.find().toArray((err, items) => {
-        res.send(items);
-      });
+
+    app.get("/services", async (req, res) => {
+      const services = servicesCollection.find()
+      const items = await services.toArray();
+      res.send(items);
     });
 
-    app.get("/service/:id", (req, res) => {
-      servicesCollection
-        .find({
-          _id: ObjectId(req.params.id)
-        })
-        .toArray((err, items) => {
-          res.send(items);
-        });
+    app.get("/service/:id", async (req, res) => {
+      const service = servicesCollection.find({
+        _id: new ObjectId(req.params.id)
+      })
+      const items = await service.toArray();
+      res.send(items);
     });
 
-    app.post("/addService", (req, res) => {
+    app.post("/addService", async (req, res) => {
       const newService = req.body;
-      servicesCollection.insertOne(newService).then((result) => {
-        res.send(result.insertedCount > 0);
-      });
+      const result = await servicesCollection.insertOne(newService)
+      res.send(result.insertedCount > 0);
     });
 
-    app.delete("/deleteService/:id", (req, res) => {
-      servicesCollection
+    app.delete("/deleteService/:id", async (req, res) => {
+      const result = await servicesCollection
         .deleteOne({
-          _id: ObjectId(req.params.id)
+          _id: new ObjectId(req.params.id)
         })
-        .then((result) => {
-          res.send(result.deletedCount > 0);
-        });
+      res.send(result.deletedCount > 0);
     });
 
     //********* */
     // Reviews
     //******** */
 
-    const reviewsCollection = client
-      .db(process.env.DB_NAME)
-      .collection("reviews");
+    const reviewsCollection = client.db(process.env.DB_NAME).collection("reviews");
 
-    app.post("/addReview", (req, res) => {
+    app.post("/addReview", async (req, res) => {
       const newBooking = req.body;
-      reviewsCollection.insertOne(newBooking).then((result) => {
-        res.send(result.insertedCount > 0);
-      });
+      const result = await reviewsCollection.insertOne(newBooking)
+      res.send(result.insertedCount > 0);
     });
 
-    app.get("/reviews", (req, res) => {
-      reviewsCollection.find().toArray((err, items) => {
-        res.send(items);
-      });
+    app.get("/reviews", async (req, res) => {
+      const reviews = reviewsCollection.find();
+      const items = await reviews.toArray();
+      res.send(items);
     });
 
     //********** */
     const adminCollection = client.db(process.env.DB_NAME).collection("admin");
 
-    app.post("/admin", (req, res) => {
+    app.post("/admin", async (req, res) => {
       const userEmail = req.body.email;
-      console.log(userEmail);
-      adminCollection.find({
+      const admins = adminCollection.find({
         email: userEmail
-      }).toArray((err, admin) => {
-        res.send(admin.length > 0);
-      });
+      })
+      const admin = await admins.toArray();
+      res.send(admin.length > 0);
     });
 
-    app.post("/makeAdmin", (req, res) => {
+    app.post("/makeAdmin", async (req, res) => {
       const newAdmin = req.body;
-      adminCollection.insertOne(newAdmin).then((result) => {
-        res.send(result.insertedCount > 0);
-      });
+      const result = await adminCollection.insertOne(newAdmin)
+      res.send(result.insertedCount > 0);
     });
-
-    await client.db("admin").command({
-      ping: 1
-    });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    // // Ensures that the client will close when you finish/error
+    // await client.close();
   }
 }
 run().catch(console.dir);
-
 
 
 app.listen(process.env.PORT || 5055, (err) => {
