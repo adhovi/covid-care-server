@@ -135,7 +135,7 @@ async function run() {
       const userEmail = req.body.email;
       const admins = adminCollection.find({
         email: userEmail
-      })
+      });
       const admin = await admins.toArray();
       res.send(admin.length > 0);
     });
