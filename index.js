@@ -43,7 +43,7 @@ async function run() {
     app.post("/addBooking", async (req, res) => {
       const newBooking = req.body;
       const result = await bookingsCollection.insertOne(newBooking)
-      res.send(result.insertedCount > 0);
+      res.send(result.acknowledged);
     });
 
 
@@ -72,7 +72,7 @@ async function run() {
           status: order.status
         },
       }, );
-      res.send(result.modifiedCount > 0)
+      res.send(result.acknowledged)
     });
 
     //******************
@@ -99,7 +99,7 @@ async function run() {
     app.post("/addService", async (req, res) => {
       const newService = req.body;
       const result = await servicesCollection.insertOne(newService)
-      res.send(result.insertedCount > 0);
+      res.send(result.acknowledged);
     });
 
     app.delete("/deleteService/:id", async (req, res) => {
@@ -107,7 +107,8 @@ async function run() {
         .deleteOne({
           _id: new ObjectId(req.params.id)
         })
-      res.send(result.deletedCount > 0);
+        console.log(result);
+      res.send(result.acknowledged);
     });
 
     //********* */
@@ -119,7 +120,7 @@ async function run() {
     app.post("/addReview", async (req, res) => {
       const newBooking = req.body;
       const result = await reviewsCollection.insertOne(newBooking)
-      res.send(result.insertedCount > 0);
+      res.send(result.acknowledged);
     });
 
     app.get("/reviews", async (req, res) => {
@@ -142,8 +143,8 @@ async function run() {
 
     app.post("/makeAdmin", async (req, res) => {
       const newAdmin = req.body;
-      const result = await adminCollection.insertOne(newAdmin)
-      res.send(result.insertedCount > 0);
+      const result = await adminCollection.insertOne(newAdmin);
+      res.send(result.acknowledged);
     });
   } finally {
     // // Ensures that the client will close when you finish/error
